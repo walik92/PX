@@ -31,7 +31,7 @@ namespace PX.API.Controllers
 
         // POST api/company/create
         [HttpPost("create")]
-        [ProducesResponseType(201, Type = typeof(Company))]
+        [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> Create([FromBody] CompanyModel companyModel)
         {
@@ -40,11 +40,9 @@ namespace PX.API.Controllers
                 return BadRequest(ModelState);
             }
 
-
-            //var id = await _companyRepository.AddAsync(company);
-
-            //return CreatedAtAction("", new { id = id }, company);
-            return Accepted("d");
+            var company = _mapper.Map<Company>(companyModel);
+            var id = await _companyRepository.AddAsync(company);
+            return Created("", new { Id = id });
         }
 
         // PUT api/values/5

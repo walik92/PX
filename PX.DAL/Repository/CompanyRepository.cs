@@ -25,6 +25,7 @@ namespace PX.DAL.Repository
         public async Task<long> AddAsync(Company company)
         {
             await _context.Companies.AddAsync(company);
+            await _context.SaveChangesAsync();
             return company.Id;
         }
 
