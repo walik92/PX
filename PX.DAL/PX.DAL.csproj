@@ -123,12 +123,14 @@
     <Compile Include="DTO\Company.cs" />
     <Compile Include="DTO\Employee.cs" />
     <Compile Include="Enums\JobTitleEnum.cs" />
+    <Compile Include="IRepository\ICompanyRepository.cs" />
     <Compile Include="Migrations\20181016204106_init.cs" />
     <Compile Include="Migrations\20181016204106_init.designer.cs">
       <DependentUpon>20181016204106_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\PxDbContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\CompanyRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
