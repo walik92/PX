@@ -132,6 +132,10 @@
     <Compile Include="Migrations\20181016204106_init.designer.cs">
       <DependentUpon>20181016204106_init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20181019100848_2.cs" />
+    <Compile Include="Migrations\20181019100848_2.designer.cs">
+      <DependentUpon>20181019100848_2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\PxDbContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\CompanyRepository.cs" />

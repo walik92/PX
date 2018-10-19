@@ -15,7 +15,7 @@ namespace PX.API.Configurations
 
             CreateMap<EmployeeModel, Employee>()
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
-                .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.LastName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
                 .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
                 .ForMember(dest => dest.JobTitle, opt => opt.MapFrom(src => src.JobTitle));
 
@@ -26,7 +26,7 @@ namespace PX.API.Configurations
 
             CreateMap<Employee, EmployeeModel>()
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
-                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Surname))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
                 .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth))
                 .ForMember(dest => dest.JobTitle, opt => opt.MapFrom(src => src.JobTitle));
         }

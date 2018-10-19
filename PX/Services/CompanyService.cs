@@ -30,7 +30,7 @@ namespace PX.API.Services
             if (!string.IsNullOrEmpty(searchModel.Keyword))
                 predicate = c => EF.Functions.Like(c.Name, $"{searchModel.Keyword}%")
                                  || c.Employees.Any(e => EF.Functions.Like(e.FirstName, $"{searchModel.Keyword}%"))
-                                 || c.Employees.Any(e => EF.Functions.Like(e.Surname, $"{searchModel.Keyword}%"));
+                                 || c.Employees.Any(e => EF.Functions.Like(e.LastName, $"{searchModel.Keyword}%"));
 
             if (searchModel.EmployeeDateOfBirthFrom.HasValue) predicate = c => c.Employees.Any(e => e.DateOfBirth.Date >= searchModel.EmployeeDateOfBirthFrom.Value.Date);
 
