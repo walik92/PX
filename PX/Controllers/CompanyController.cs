@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PX.API.BasicAuth.API.BasicAuth.Attributes;
 using PX.API.IServices;
 using PX.API.Models;
 
@@ -26,18 +28,20 @@ namespace PX.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var result = await _companyService.SearchAsync<CompanyModel>(searchModel);
-            return Ok(new {Results = result});
+            return Ok(new { Results = result });
         }
 
+        [BasicAuthorize]
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CompanyModel companyModel)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var id = await _companyService.CreateAsync(companyModel);
-            return Created("", new {Id = id});
+            return Created("", new { Id = id });
         }
 
+        [BasicAuthorize]
         [HttpPut("update/{companyId}")]
         public async Task<IActionResult> Put(int companyId, [FromBody] CompanyModel companyModel)
         {
@@ -55,6 +59,7 @@ namespace PX.API.Controllers
             }
         }
 
+        [BasicAuthorize]
         [HttpDelete("delete/{companyId}")]
         public async Task<IActionResult> Delete(int companyId)
         {

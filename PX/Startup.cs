@@ -35,10 +35,7 @@ namespace PX.API
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<ICompanyService, CompanyService>();
 
-            var configAutoMapper = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new AutoMapperProfile());
-            });
+            var configAutoMapper = new MapperConfiguration(mc => { mc.AddProfile(new AutoMapperProfile()); });
 
             services.AddSingleton(configAutoMapper.CreateMapper());
         }
@@ -52,7 +49,6 @@ namespace PX.API
                 app.UseHsts();
 
             app.UseMvc();
-
         }
     }
 }
