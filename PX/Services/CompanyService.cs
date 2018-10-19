@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -25,21 +24,19 @@ namespace PX.API.Services
 
         public async Task<IEnumerable<T>> SearchAsync<T>(SearchModel searchModel) where T : class
         {
-            Expression<Func<Company, bool>> predicate = c => true;
-
+            var query = _companyRepository.GetAll();
             if (!string.IsNullOrEmpty(searchModel.Keyword))
-                predicate = c => EF.Functions.Like(c.Name, $"%{searchModel.Keyword}%")
-                                 || c.Employees.Any(e => EF.Functions.Like(e.FirstName, $"%{searchModel.Keyword}%"))
-                                 || c.Employees.Any(e => EF.Functions.Like(e.LastName, $"%{searchModel.Keyword}%"));
+                query = query.Where(c => EF.Functions.Like(c.Name, $"%{searchModel.Keyword}%")
+                                         || c.Employees.Any(e => EF.Functions.Like(e.FirstName, $"%{searchModel.Keyword}%"))
+                                         || c.Employees.Any(e => EF.Functions.Like(e.LastName, $"%{searchModel.Keyword}%")));
 
-            if (searchModel.EmployeeDateOfBirthFrom.HasValue) predicate = c => c.Employees.Any(e => e.DateOfBirth.Date >= searchModel.EmployeeDateOfBirthFrom.Value.Date);
+            if (searchModel.EmployeeDateOfBirthFrom.HasValue) query = query.Where(c => c.Employees.Any(e => e.DateOfBirth.Date >= searchModel.EmployeeDateOfBirthFrom.Value.Date));
 
-            if (searchModel.EmployeeDateOfBirthTo.HasValue) predicate = c => c.Employees.Any(e => e.DateOfBirth.Date <= searchModel.EmployeeDateOfBirthTo.Value.Date);
+            if (searchModel.EmployeeDateOfBirthTo.HasValue) query = query.Where(c => c.Employees.Any(e => e.DateOfBirth.Date <= searchModel.EmployeeDateOfBirthTo.Value.Date));
 
-            if (searchModel.EmployeeJobTitles != null) predicate = c => c.Employees.Any(e => searchModel.EmployeeJobTitles.Contains(e.JobTitle));
-
-            var result = await _companyRepository.GetAsync(predicate);
-            return _mapper.Map<IEnumerable<T>>(result);
+            if (searchModel.EmployeeJobTitles != null) query = query.Where(c => c.Employees.Any(e => searchModel.EmployeeJobTitles.Contains(e.JobTitle)));
+            
+            return _mapper.Map<IEnumerable<T>>(await query.ToListAsync());
         }
 
         public async Task<long> CreateAsync(CompanyModel companyModel)

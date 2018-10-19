@@ -19,9 +19,9 @@ namespace PX.DAL.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<Company>> GetAsync(Expression<Func<Company, bool>> predicate)
+        public IQueryable<Company> GetAll()
         {
-            return await _context.Companies.Include(e => e.Employees).Where(predicate).AsNoTracking().ToListAsync();
+            return _context.Companies.Include(e => e.Employees).AsNoTracking().AsQueryable();
         }
 
         public async Task<Company> GetByIdAsync(long companyId)
