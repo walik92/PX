@@ -41,6 +41,7 @@ namespace PX.DAL.Repository
             _context.Companies.Attach(company);
             _context.Entry(company).State = EntityState.Modified;
 
+            await _context.Employees.Where(q => q.CompanyId == company.Id).ForEachAsync(e => _context.Employees.Remove(e));
             await _context.SaveChangesAsync();
         }
 
