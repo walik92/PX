@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PX.API.IServices;
 using PX.API.Models;
 
@@ -10,10 +12,11 @@ namespace PX.API.Controllers
     public class CompanyController : ControllerBase
     {
         private readonly ICompanyService _companyService;
-
-        public CompanyController(ICompanyService companyService)
+        private readonly ILogger<CompanyController> _logger;
+        public CompanyController(ICompanyService companyService, ILogger<CompanyController> logger)
         {
             _companyService = companyService;
+            _logger = logger;
         }
 
         [HttpPost("search")]
@@ -22,7 +25,7 @@ namespace PX.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var result = await _companyService.SearchAsync<CompanyModel>(searchModel);
-            return Ok(new {Results = result});
+            return Ok(new { Results = result });
         }
 
         [HttpPost("create")]
@@ -33,17 +36,39 @@ namespace PX.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var id = await _companyService.CreateAsync(companyModel);
-            return Created("", new {Id = id});
-        }
-        
-        [HttpPut("update/{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
+            return Created("", new { Id = id });
         }
 
-        [HttpDelete("delete/{id}")]
-        public void Delete(int id)
+        [HttpPut("update/{companyId}")]
+        public async Task<IActionResult> Put(int companyId, [FromBody] CompanyModel companyModel)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            try
+            {
+                await _companyService.UpdateAsync(companyId, companyModel);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return NotFound($"Not found company by Id {companyId}");
+            }
+        }
+
+        [HttpDelete("delete/{companyId}")]
+        public async Task<IActionResult> Delete(int companyId)
+        {
+            try
+            {
+                await _companyService.DeleteAsync(companyId);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return NotFound($"Not found company by Id {companyId}");
+            }
         }
     }
 }

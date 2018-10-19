@@ -47,5 +47,24 @@ namespace PX.API.Services
             var company = _mapper.Map<Company>(companyModel);
             return await _companyRepository.AddAsync(company);
         }
+
+        public async Task UpdateAsync(long companyId, CompanyModel companyModel)
+        {
+            var companyDb = await GetByIdAsync(companyId);
+            _mapper.Map(companyModel, companyDb);
+            await _companyRepository.UpdateAsync(companyDb);
+        }
+
+        public async Task DeleteAsync(long companyId)
+        {
+            await _companyRepository.DeleteAsync(await GetByIdAsync(companyId));
+        }
+
+        private async Task<Company> GetByIdAsync(long companyId)
+        {
+            var companyDb = await _companyRepository.GetByIdAsync(companyId);
+            if (companyDb == null) throw new ArgumentException($"Not found company by Id {companyId}");
+            return companyDb;
+        }
     }
 }
