@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using PX.API.Configurations;
+using PX.API.IServices;
+using PX.API.Services;
 using PX.DAL.Context;
 using PX.DAL.IRepository;
 using PX.DAL.Repository;
@@ -31,6 +33,7 @@ namespace PX.API
 
             services.AddDbContext<PxDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<ICompanyService, CompanyService>();
 
             var configAutoMapper = new MapperConfiguration(mc =>
             {
