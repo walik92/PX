@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PX.API.BasicAuth.API.BasicAuth.Attributes;
@@ -28,7 +27,7 @@ namespace PX.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var result = await _companyService.SearchAsync<CompanyModel>(searchModel);
-            return Ok(new { Results = result });
+            return Ok(new {Results = result});
         }
 
         [BasicAuthorize]
@@ -38,7 +37,7 @@ namespace PX.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var id = await _companyService.CreateAsync(companyModel);
-            return Created("", new { Id = id });
+            return Created("", new {Id = id});
         }
 
         [BasicAuthorize]
@@ -55,7 +54,7 @@ namespace PX.API.Controllers
             catch (ArgumentException ex)
             {
                 _logger.LogInformation(ex.Message);
-                return NotFound($"Not found company by Id {companyId}");
+                return NotFound(ex.Message);
             }
         }
 
@@ -71,7 +70,7 @@ namespace PX.API.Controllers
             catch (ArgumentException ex)
             {
                 _logger.LogInformation(ex.Message);
-                return NotFound($"Not found company by Id {companyId}");
+                return NotFound(ex.Message);
             }
         }
     }

@@ -35,7 +35,7 @@ namespace PX.API.Services
             if (searchModel.EmployeeDateOfBirthTo.HasValue) query = query.Where(c => c.Employees.Any(e => e.DateOfBirth.Date <= searchModel.EmployeeDateOfBirthTo.Value.Date));
 
             if (searchModel.EmployeeJobTitles != null) query = query.Where(c => c.Employees.Any(e => searchModel.EmployeeJobTitles.Contains(e.JobTitle)));
-            
+
             return _mapper.Map<IEnumerable<T>>(await query.ToListAsync());
         }
 
