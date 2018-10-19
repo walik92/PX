@@ -9,8 +9,9 @@ namespace PX.DAL.IRepository
     public interface ICompanyRepository
     {
         Task<IEnumerable<Company>> GetAsync(Expression<Func<Company, bool>> predicate);
+        Task<Company> GetByIdAsync(long companyId);
         Task<long> AddAsync(Company company);
-        Task UpdateAsync(long companyId, Company company);
-        Task DeleteAsync(int companyId);
+        Task UpdateAsync(Company company);
+        Task DeleteAsync(Company company);
     }
 }

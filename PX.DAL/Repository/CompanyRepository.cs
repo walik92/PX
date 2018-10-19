@@ -24,6 +24,11 @@ namespace PX.DAL.Repository
             return await _context.Companies.Include(e => e.Employees).Where(predicate).AsNoTracking().ToListAsync();
         }
 
+        public async Task<Company> GetByIdAsync(long companyId)
+        {
+            return await _context.Companies.FindAsync(companyId);
+        }
+
         public async Task<long> AddAsync(Company company)
         {
             await _context.Companies.AddAsync(company);
@@ -31,20 +36,19 @@ namespace PX.DAL.Repository
             return company.Id;
         }
 
-        public async Task UpdateAsync(long companyId, Company company)
+        public async Task UpdateAsync(Company company)
         {
-            var companyOld = await _context.Companies.FindAsync(companyId);
-
-            companyOld.EstablishmentYear = company.EstablishmentYear;
-            companyOld.Name = company.Name;
+            _context.Companies.Attach(company);
+            _context.Entry(company).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int companyId)
+        public async Task DeleteAsync(Company company)
         {
-            var company = await _context.Companies.FindAsync(companyId);
-            _context.Companies.Remove(company);
+            if (_context.Entry(company).State == EntityState.Detached) _context.Companies.Attach(company);
+            _context.Remove(company);
+
             await _context.SaveChangesAsync();
         }
 
