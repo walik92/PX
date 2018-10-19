@@ -13,6 +13,7 @@ namespace PX.API.Controllers
     {
         private readonly ICompanyService _companyService;
         private readonly ILogger<CompanyController> _logger;
+
         public CompanyController(ICompanyService companyService, ILogger<CompanyController> logger)
         {
             _companyService = companyService;
@@ -25,18 +26,16 @@ namespace PX.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var result = await _companyService.SearchAsync<CompanyModel>(searchModel);
-            return Ok(new { Results = result });
+            return Ok(new {Results = result});
         }
 
         [HttpPost("create")]
-        [ProducesResponseType(201)]
-        [ProducesResponseType(400)]
         public async Task<IActionResult> Create([FromBody] CompanyModel companyModel)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var id = await _companyService.CreateAsync(companyModel);
-            return Created("", new { Id = id });
+            return Created("", new {Id = id});
         }
 
         [HttpPut("update/{companyId}")]
