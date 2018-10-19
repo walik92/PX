@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PX.DAL.Context;
@@ -17,9 +19,9 @@ namespace PX.DAL.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<Company>> GetAllAsync()
+        public async Task<IEnumerable<Company>> GetAsync(Expression<Func<Company, bool>> predicate)
         {
-            return await _context.Companies.ToListAsync();
+            return await _context.Companies.Include(e => e.Employees).Where(predicate).AsNoTracking().ToListAsync();
         }
 
         public async Task<long> AddAsync(Company company)

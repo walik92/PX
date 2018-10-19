@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using PX.API.IServices;
 using PX.API.Models;
-using PX.DAL.DTO;
-using PX.DAL.IRepository;
 
 namespace PX.API.Controllers
 {
@@ -12,46 +9,38 @@ namespace PX.API.Controllers
     [ApiController]
     public class CompanyController : ControllerBase
     {
-        private readonly ICompanyRepository _companyRepository;
-        private readonly IMapper _mapper;
+        private readonly ICompanyService _companyService;
 
-        public CompanyController(ICompanyRepository companyRepository, IMapper mapper)
+        public CompanyController(ICompanyService companyService)
         {
-            _companyRepository = companyRepository;
-            _mapper = mapper;
+            _companyService = companyService;
         }
 
-        // GET api/company/search
-        [HttpGet("search")]
-        public async Task<IActionResult> Search()
+        [HttpPost("search")]
+        public async Task<IActionResult> Search(SearchModel searchModel)
         {
-            var companies = await _companyRepository.GetAllAsync();
-            return Ok(companies);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var result = await _companyService.SearchAsync<CompanyModel>(searchModel);
+            return Ok(new {Results = result});
         }
 
-        // POST api/company/create
         [HttpPost("create")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> Create([FromBody] CompanyModel companyModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var company = _mapper.Map<Company>(companyModel);
-            var id = await _companyRepository.AddAsync(company);
-            return Created("", new { Id = id });
+            var id = await _companyService.CreateAsync(companyModel);
+            return Created("", new {Id = id});
         }
-
-        // PUT api/values/5
+        
         [HttpPut("update/{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/values/5
         [HttpDelete("delete/{id}")]
         public void Delete(int id)
         {
