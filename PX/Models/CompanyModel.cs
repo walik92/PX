@@ -5,9 +5,9 @@ namespace PX.API.Models
 {
     public class CompanyModel
     {
-        [Required] public string Name { get; set; }
+        [Required] [MaxLength(100)] public string Name { get; set; }
 
-        [Required] public string EstablishmentYear { get; set; }
+        [Required] public int EstablishmentYear { get; set; }
 
         [Required] public IEnumerable<EmployeeModel> Employees { get; set; }
     }
