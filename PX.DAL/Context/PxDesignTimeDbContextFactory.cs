@@ -5,7 +5,7 @@ namespace PX.DAL.Context
 {
     public class PxDesignTimeDbContextFactory : IDesignTimeDbContextFactory<PxDbContext>
     {
-        private const string ConnectionString = "Server=(localdb)\\mssqllocaldb;Database=PXTest;Trusted_Connection=True;MultipleActiveResultSets=true";
+        private const string ConnectionString = "Server=(localdb)\\mssqllocaldb;Database=BackendTestWalkowiak;Trusted_Connection=True;MultipleActiveResultSets=true";
 
         public PxDbContext CreateDbContext(string[] args)
         {
